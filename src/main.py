@@ -7,7 +7,7 @@ from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
-from models import db
+from models import db, List
 #from models import Person
 
 app = Flask(__name__)
@@ -37,7 +37,50 @@ def handle_person():
 
     return jsonify(response_body), 200
 
+@app.route('/todos/user/<string:username>', methods=['PUT', 'GET', 'DELETE', 'POST'])
+def List(username):
+
+    if request.method == 'PUT':
+
+        list = PersonList.json.get(3)
+        list.user = request.json.get('name')
+        list.task = request.json.get('task')
+        db.session.commit()
+
+        return jsonify({
+
+            "method": "PUT"
+        }), 200
+    if request.method == 'GET':
+
+        List = List.query.get()
+
+        return jsonify({
+            "method": "GET"
+        }), 200
+
+    if request.method == 'DELETE':
+
+        List = List.query.get()
+        List.delete()
+        db.session.commit()
+
+        return jsonify({
+            "method": "DELETE"
+        }), 200
+    if request.method == 'POST':
+
+        List = List()
+        list.user = request.json.get('name')
+        list.task = request.json.get('task')
+
+        db.session.commit()
+
+        return jsonify({
+            "method": "POST"
+        }), 200
+
 # this only runs if `$ python src/main.py` is exercuted
-if __name__ == '__main__':
-    PORT = int(os.environ.get('PORT', 3000))
-    app.run(host='0.0.0.0', port=PORT, debug=False)
+    if __name__ == '__main__':
+        PORT = int(os.environ.get('PORT', 3000))
+        app.run(host='0.0.0.0', port=PORT, debug=False)
